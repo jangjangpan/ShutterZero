@@ -93,6 +93,22 @@ kotlin {
     jvmToolchain(21)
 }
 
+// 릴리스 APK 가 바뀔 때마다 메일 '나에게 보내기'로 전달한다 (설정: tools/mail_apk.py setup ...).
+// 내용이 같은 APK 는 스크립트가 건너뛰고, 메일이 실패해도 빌드는 깨지 않는다.
+val mailReleaseApk by tasks.registering(Exec::class) {
+    description = "Mails the release APK to the owner when it changed"
+    commandLine(
+        "py",
+        rootProject.file("tools/mail_apk.py").absolutePath,
+        "send",
+        layout.buildDirectory.dir("outputs/apk/release").get().asFile.absolutePath
+    )
+    isIgnoreExitValue = true
+}
+tasks.matching { it.name == "assembleRelease" }.configureEach {
+    finalizedBy(mailReleaseApk)
+}
+
 dependencies {
   val composeBom = platform(libs.androidx.compose.bom)
   implementation(composeBom)
