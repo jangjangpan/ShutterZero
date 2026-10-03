@@ -256,7 +256,7 @@ class MainScreenViewModel(application: Application) : AndroidViewModel(applicati
             return
         }
 
-        if (!DeveloperOptionsManager.isWirelessDebuggingEnabled(app)) {
+        if (!DeveloperOptionsManager.canUseWirelessDebugging(app)) {
             _uiState.update {
                 it.copy(
                     isWirelessDebuggingEnabled = false,

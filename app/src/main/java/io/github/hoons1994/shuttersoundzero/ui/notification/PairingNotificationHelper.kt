@@ -127,7 +127,7 @@ object PairingNotificationHelper {
         )
 
         val builder = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_shutter)
             .setContentTitle(copy.title)
             .setContentText(copy.summaryText)
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -257,7 +257,7 @@ object PairingNotificationHelper {
         )
 
         return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_shutter)
             .setContentTitle(context.getString(R.string.pairing_progress_title))
             .setContentText(context.getString(R.string.pairing_progress_text))
             .setPriority(NotificationCompat.PRIORITY_MAX)
@@ -298,7 +298,7 @@ object PairingNotificationHelper {
         )
 
         val notification = NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_shutter)
             .setContentTitle(
                 context.getString(
                     R.string.pairing_success_title,
@@ -328,7 +328,7 @@ object PairingNotificationHelper {
 
     private fun buildRedactedPublicVersion(context: Context, completed: Boolean): Notification {
         return NotificationCompat.Builder(context, CHANNEL_ID)
-            .setSmallIcon(R.mipmap.ic_launcher)
+            .setSmallIcon(R.drawable.ic_stat_shutter)
             .setContentTitle(
                 context.getString(
                     if (completed) R.string.pairing_public_title_completed

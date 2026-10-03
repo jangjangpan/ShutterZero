@@ -18,12 +18,14 @@ android {
     namespace = "io.github.hoons1994.shuttersoundzero"
     compileSdk = 37
     defaultConfig {
-        applicationId = "io.github.hoons1994.shuttersoundzero"
+        applicationId = "dev.junyj.shutterzero"
         minSdk = 30
         targetSdk = 37
-        versionCode = 162
-        versionName = "1.5.11"
+        versionCode = 1
+        versionName = "1.0.0"
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+        // 갤럭시(Android 11+)는 모두 arm64 라 다른 ABI 의 네이티브 라이브러리는 뺀다.
+        ndk { abiFilters += "arm64-v8a" }
     }
 
     signingConfigs {
@@ -58,8 +60,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_17
-        targetCompatibility = JavaVersion.VERSION_17
+        sourceCompatibility = JavaVersion.VERSION_21
+        targetCompatibility = JavaVersion.VERSION_21
     }
     buildFeatures {
       compose = true
@@ -80,7 +82,7 @@ androidComponents {
         variant.outputs.forEach { output ->
             output.outputFileName.set(
                 output.versionName.map { versionName ->
-                    "ShutterSoundZero_v${versionName}_${variant.name}.apk"
+                    "ShutterZero_v${versionName}_${variant.name}.apk"
                 }
             )
         }
@@ -88,7 +90,7 @@ androidComponents {
 }
 
 kotlin {
-    jvmToolchain(17)
+    jvmToolchain(21)
 }
 
 dependencies {

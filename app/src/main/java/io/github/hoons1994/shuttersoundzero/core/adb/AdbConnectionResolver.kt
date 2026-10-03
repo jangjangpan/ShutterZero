@@ -54,6 +54,10 @@ internal object AdbConnectionResolver {
     }
 }
 
+internal class WirelessDebuggingAutoEnableException : IOException(
+    "무선 디버깅을 자동으로 켜지 못했습니다."
+)
+
 internal class AdbServiceNotFoundException(cause: Throwable? = null) : IOException(
     "무선 디버깅의 연결 서비스를 찾지 못했습니다.", cause
 )

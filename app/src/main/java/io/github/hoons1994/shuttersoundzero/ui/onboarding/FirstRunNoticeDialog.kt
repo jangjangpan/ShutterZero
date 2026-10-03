@@ -30,7 +30,7 @@ fun FirstRunNoticeDialog(onConfirm: () -> Unit) {
                     lineHeight = 20.sp
                 )
                 Text(
-                    text = "ShutterSoundZero는 삼성 갤럭시의 카메라 셔터음 강제 설정을 변경합니다.",
+                    text = "셔터 제로는 삼성 갤럭시의 카메라 셔터음 강제 설정을 변경합니다.",
                     style = MaterialTheme.typography.bodyMedium,
                     lineHeight = 20.sp
                 )

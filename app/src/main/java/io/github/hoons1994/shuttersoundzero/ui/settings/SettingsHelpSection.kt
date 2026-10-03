@@ -1,5 +1,6 @@
 package io.github.hoons1994.shuttersoundzero.ui.settings
 
+import io.github.hoons1994.shuttersoundzero.theme.LocalThemeTokens
 import android.content.ActivityNotFoundException
 import android.content.Context
 import android.content.Intent
@@ -250,7 +251,7 @@ internal fun NotificationPopupSettingsRow(onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.height(4.dp))
             Text(
-                text = "간략한 팝업을 사용 중이라면 ShutterSoundZero만 자세한 팝업으로 바꿔 6자리 코드 입력을 더 편하게 사용할 수 있습니다.",
+                text = "간략한 팝업을 사용 중이라면 셔터 제로만 자세한 팝업으로 바꿔 6자리 코드 입력을 더 편하게 사용할 수 있습니다.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 19.sp
@@ -432,7 +433,7 @@ private fun SectionLabel(text: String) {
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.1.sp
         ),
-        color = MaterialTheme.colorScheme.primary,
+        color = LocalThemeTokens.current.accentText,
         modifier = Modifier.padding(start = 24.dp, bottom = 6.dp)
     )
 }

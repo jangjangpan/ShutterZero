@@ -1,5 +1,6 @@
 package io.github.hoons1994.shuttersoundzero.ui.settings
 
+import io.github.hoons1994.shuttersoundzero.theme.LocalThemeTokens
 import android.database.ContentObserver
 import android.content.Context
 import android.content.ContextWrapper
@@ -78,7 +79,6 @@ import io.github.hoons1994.shuttersoundzero.security.AppLockAuthenticator
 import io.github.hoons1994.shuttersoundzero.security.AppLockSession
 import io.github.hoons1994.shuttersoundzero.ui.notification.PairingNotificationHelper
 
-private val CardRadius = 20.dp
 private val CardPaddingH = 20.dp
 private val CardPaddingV = 16.dp
 private const val RELEASES_URL = "https://github.com/hoons1994/ShutterSoundZero/releases/latest"
@@ -236,6 +236,13 @@ fun SettingsScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
+            GroupLabel("테마")
+            SettingsCard {
+                ThemePicker()
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
             GroupLabel("카메라 설정")
             SettingsCard {
                 if (isCscMuted) {
@@ -246,7 +253,7 @@ fun SettingsScreen(
                             if (!CscMuteManager.hasWritePermission(context)) {
                                 restoreResultMessage =
                                     "1회 설정이 필요합니다. 홈 화면에서 [1회 설정 시작]을 먼저 진행해 주세요."
-                            } else if (!DeveloperOptionsManager.isWirelessDebuggingEnabled(context)) {
+                            } else if (!DeveloperOptionsManager.canUseWirelessDebugging(context)) {
                                 showRestoreWirelessDebuggingHelp = true
                             } else if (!LocalNetworkAccess.isGranted(context)) {
                                 requestLocalNetworkPermission(CameraAction.RESTORE)
@@ -263,7 +270,7 @@ fun SettingsScreen(
                             if (!CscMuteManager.hasWritePermission(context)) {
                                 restoreResultMessage =
                                     "1회 설정이 필요합니다. 홈 화면에서 [1회 설정 시작]을 먼저 진행해 주세요."
-                            } else if (!DeveloperOptionsManager.isWirelessDebuggingEnabled(context)) {
+                            } else if (!DeveloperOptionsManager.canUseWirelessDebugging(context)) {
                                 showReapplyWirelessDebuggingHelp = true
                             } else if (!operationState.isReapplyInProgress) {
                                 if (!LocalNetworkAccess.isGranted(context)) {
@@ -571,7 +578,7 @@ fun SettingsScreen(
                 text = {
                     Text(
                         "개발자 옵션 자체와 USB·무선 디버깅을 모두 끕니다.\n\n" +
-                            "이미 연결된 ShutterSoundZero 권한과 적용된 카메라 설정은 그대로 유지됩니다."
+                            "이미 연결된 셔터 제로 권한과 적용된 카메라 설정은 그대로 유지됩니다."
                     )
                 },
                 confirmButton = {
@@ -662,7 +669,7 @@ fun SettingsScreen(
                         verticalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         Text(
-                            text = "Shutter Sound Zero (셔터사운드 제로)\nCopyright (C) 2026 charmingcolor",
+                            text = "셔터 제로 — Shutter Sound Zero(셔터사운드 제로) 수정판\nCopyright (C) 2026 charmingcolor\n2026-10 수정: 테마 4종, 새 아이콘, 무선 디버깅 자동 켜기",
                             style = MaterialTheme.typography.bodyMedium.copy(fontWeight = FontWeight.SemiBold),
                             color = MaterialTheme.colorScheme.onSurface
                         )
@@ -679,7 +686,7 @@ fun SettingsScreen(
                         Text(
                             text = "사용된 오픈소스 라이브러리:",
                             style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                            color = MaterialTheme.colorScheme.primary
+                            color = LocalThemeTokens.current.accentText
                         )
                         Text(
                             text = "• Android Jetpack / Compose (Apache 2.0)\n• libadb-android (GPL-3.0 / Apache 2.0)\n• Bouncy Castle (Bouncy Castle Licence)\n• Conscrypt (Apache 2.0)",
@@ -731,7 +738,7 @@ private fun GroupLabel(title: String) {
             fontWeight = FontWeight.SemiBold,
             letterSpacing = 0.1.sp
         ),
-        color = MaterialTheme.colorScheme.primary,
+        color = LocalThemeTokens.current.accentText,
         modifier = Modifier.padding(start = CardPaddingH + 4.dp, bottom = 6.dp)
     )
 }
@@ -742,7 +749,7 @@ private fun SettingsCard(content: @Composable ColumnScope.() -> Unit) {
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = CardPaddingH),
-        shape = RoundedCornerShape(CardRadius),
+        shape = RoundedCornerShape(LocalThemeTokens.current.cardRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {

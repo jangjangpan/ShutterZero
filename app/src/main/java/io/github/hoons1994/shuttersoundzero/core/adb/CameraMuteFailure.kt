@@ -8,6 +8,10 @@ enum class CameraMuteFailure(val title: String, val message: String) {
         "앱 권한을 확인해 주세요",
         "카메라 설정을 바꾸려면 로컬 네트워크 권한이 필요합니다. 앱 설정에서 권한을 허용한 뒤 다시 시도해 주세요."
     ),
+    WIRELESS_AUTO_ENABLE(
+        "무선 디버깅을 켜지 못했어요",
+        "Wi-Fi에 연결돼 있는지 확인해 주세요. 처음 쓰는 Wi-Fi라면 무선 디버깅을 한 번 직접 켜고 '이 네트워크에서 항상 허용'을 선택하면, 다음부터는 앱이 알아서 켜고 끕니다."
+    ),
     DISCOVERY(
         "무선 디버깅 연결을 찾지 못했어요",
         "Wi-Fi 연결과 무선 디버깅 화면의 연결 허용 여부를 확인해 주세요. 무선 디버깅을 껐다 켠 뒤 다시 시도하고, 계속 실패하면 앱의 연결 오류 안내에서 [$PAIRING_RECOVERY_LABEL]을 눌러 새 코드로 연결해 주세요."
@@ -26,6 +30,7 @@ enum class CameraMuteFailure(val title: String, val message: String) {
     companion object {
         fun from(error: Throwable?): CameraMuteFailure = when (error) {
             is LocalNetworkPermissionRequiredException -> LOCAL_NETWORK_PERMISSION
+            is WirelessDebuggingAutoEnableException -> WIRELESS_AUTO_ENABLE
             is AdbServiceNotFoundException -> DISCOVERY
             is AdbConnectionFailedException -> CONNECTION
             else -> APPLY

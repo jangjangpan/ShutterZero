@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.provider.Settings
 import io.github.hoons1994.shuttersoundzero.core.adb.CameraMuteOperationGate
+import io.github.hoons1994.shuttersoundzero.core.adb.WirelessDebuggingAutoEnableException
+import kotlinx.coroutines.delay
 
 /**
  * 앱 설정이 끝난 뒤 개발자 옵션과 ADB 디버깅을 안전하게 종료한다.
@@ -48,6 +50,46 @@ object DeveloperOptionsManager {
 
     private fun readWirelessDebuggingEnabled(context: Context): Boolean =
         Settings.Global.getInt(context.contentResolver, ADB_WIFI_ENABLED, 0) != 0
+
+    /**
+     * 무선 디버깅이 꺼져 있어도 앱이 직접 켤 수 있는 상태인지 확인한다.
+     * 권한 연동이 끝났고 Wi-Fi에 연결돼 있으면 카메라 설정 변경을 바로 시작할 수 있다.
+     */
+    fun canUseWirelessDebugging(context: Context): Boolean =
+        isWirelessDebuggingEnabled(context) ||
+            (canDisableDirectly(context) && WifiConnectionStatus.isWifiConnected(context))
+
+    /**
+     * 꺼져 있는 무선 디버깅을 앱이 직접 켠다. 이미 켜져 있으면 아무것도 하지 않고 false를 돌려준다.
+     *
+     * 이 Wi-Fi를 아직 '항상 허용'하지 않았다면 시스템이 값을 곧바로 0으로 되돌리므로,
+     * 쓰기 성공만 믿지 않고 일정 시간 동안 다시 읽어 실제로 켜진 상태가 유지되는지 확인한다.
+     *
+     * @return 이번 호출에서 새로 켰으면 true
+     * @throws WirelessDebuggingAutoEnableException 켜지 못했거나 시스템이 되돌린 경우
+     */
+    suspend fun ensureWirelessDebuggingOn(context: Context): Boolean {
+        if (isWirelessDebuggingEnabled(context)) return false
+        if (!canDisableDirectly(context) || !WifiConnectionStatus.isWifiConnected(context)) {
+            throw WirelessDebuggingAutoEnableException()
+        }
+        val written = runCatching {
+            Settings.Global.putInt(context.contentResolver, ADB_WIFI_ENABLED, 1)
+        }.getOrDefault(false)
+        if (!written) throw WirelessDebuggingAutoEnableException()
+
+        // AdbDebuggingManager가 신뢰하지 않는 네트워크면 짧은 시간 안에 값을 되돌린다.
+        repeat(6) {
+            delay(250)
+            if (!isWirelessDebuggingEnabled(context)) throw WirelessDebuggingAutoEnableException()
+        }
+        return true
+    }
+
+    /** [ensureWirelessDebuggingOn]으로 켠 무선 디버깅을 작업 실패 시 되돌린다. 작업 게이트 안에서 호출된다. */
+    internal fun revertAutoEnabledWirelessDebugging(context: Context) {
+        runCatching { Settings.Global.putInt(context.contentResolver, ADB_WIFI_ENABLED, 0) }
+    }
 
     /**
      * 설정 작업이 끝난 뒤 무선 디버깅만 끈다.

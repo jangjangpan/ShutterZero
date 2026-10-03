@@ -24,13 +24,14 @@ internal fun CameraMuteFailureDialog(
                 onDismiss()
                 when (failure) {
                     CameraMuteFailure.CONNECTION -> onReconnect()
-                    CameraMuteFailure.DISCOVERY, CameraMuteFailure.LOCAL_NETWORK_PERMISSION -> onOpenSettings()
+                    CameraMuteFailure.DISCOVERY, CameraMuteFailure.WIRELESS_AUTO_ENABLE,
+                    CameraMuteFailure.LOCAL_NETWORK_PERMISSION -> onOpenSettings()
                     CameraMuteFailure.APPLY -> Unit
                 }
             }) {
                 Text(when (failure) {
                     CameraMuteFailure.CONNECTION -> reconnectLabel
-                    CameraMuteFailure.DISCOVERY -> "무선 디버깅 설정"
+                    CameraMuteFailure.DISCOVERY, CameraMuteFailure.WIRELESS_AUTO_ENABLE -> "무선 디버깅 설정"
                     CameraMuteFailure.LOCAL_NETWORK_PERMISSION -> "앱 권한 설정"
                     CameraMuteFailure.APPLY -> "확인"
                 })

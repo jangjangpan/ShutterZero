@@ -8,6 +8,7 @@ import android.os.SystemClock
 import android.util.Log
 import io.github.hoons1994.shuttersoundzero.core.CscMuteManager
 import io.github.hoons1994.shuttersoundzero.core.CscStateVerifier
+import io.github.hoons1994.shuttersoundzero.core.DeveloperOptionsManager
 import io.github.hoons1994.shuttersoundzero.data.PreferencesRepository
 import io.github.hoons1994.shuttersoundzero.diagnostics.DiagnosticLogger
 import io.github.muntashirakon.adb.AdbShellIdentity
@@ -176,7 +177,8 @@ class StandaloneAdbManager(context: Context) {
             val result = operationRunner.run(block)
             val error = result.exceptionOrNull()
             if (error == null || error is LocalNetworkPermissionRequiredException ||
-                error is AdbServiceNotFoundException || error is AdbConnectionFailedException) result
+                error is AdbServiceNotFoundException || error is AdbConnectionFailedException ||
+                error is WirelessDebuggingAutoEnableException) result
             else {
                 logFailure(message, error)
                 val userMessage = when (error) {
@@ -274,8 +276,16 @@ class StandaloneAdbManager(context: Context) {
         "셔터음 설정 변경 중 오류가 발생했습니다. 무선 디버깅 상태를 확인해 주세요."
     ) {
         diagnosed(if (enableMute) DiagnosticLogger.Stage.CSC_REAPPLY else DiagnosticLogger.Stage.CSC_RESTORE) {
-            ensureConnection(null, 4_000)
-            applyAndVerifyMute(enableMute)
+            // 방금 켠 무선 디버깅은 새 포트로 mDNS 광고가 올라올 때까지 시간이 더 걸린다.
+            val autoEnabled = DeveloperOptionsManager.ensureWirelessDebuggingOn(context)
+            try {
+                ensureConnection(null, if (autoEnabled) 10_000 else 4_000)
+                applyAndVerifyMute(enableMute)
+            } catch (error: Throwable) {
+                // 앱이 켠 무선 디버깅을 실패한 채로 남겨 두지 않는다.
+                if (autoEnabled) DeveloperOptionsManager.revertAutoEnabledWirelessDebugging(context)
+                throw error
+            }
             PreferencesRepository.getInstance(context).shouldMuteOnBoot = enableMute
         }
     }

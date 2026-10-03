@@ -58,7 +58,7 @@ internal object CameraMuteTileAction {
             return
         }
 
-        if (!DeveloperOptionsManager.isWirelessDebuggingEnabled(appContext)) {
+        if (!DeveloperOptionsManager.canUseWirelessDebugging(appContext)) {
             showMessage(appContext, appContext.getString(R.string.tile_action_enable_wireless_debugging))
             requestTileRefresh(appContext)
             return

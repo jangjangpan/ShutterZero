@@ -4,6 +4,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.ReadOnlyComposable
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 
 // Brand Identity Colors
 val BrandBlueLight = Color(0xFF0072DE)
@@ -41,7 +42,7 @@ val StatusRedBgDark = Color(0xFF2C1515)
 val StatusGreen: Color
     @Composable
     @ReadOnlyComposable
-    get() = if (MaterialTheme.colorScheme.surface == SurfaceDark) {
+    get() = if (MaterialTheme.colorScheme.surface.luminance() < 0.5f) {
         StatusGreenDark
     } else {
         StatusGreenLight
@@ -50,7 +51,7 @@ val StatusGreen: Color
 val StatusAmber: Color
     @Composable
     @ReadOnlyComposable
-    get() = if (MaterialTheme.colorScheme.surface == SurfaceDark) {
+    get() = if (MaterialTheme.colorScheme.surface.luminance() < 0.5f) {
         StatusAmberDark
     } else {
         StatusAmberLight

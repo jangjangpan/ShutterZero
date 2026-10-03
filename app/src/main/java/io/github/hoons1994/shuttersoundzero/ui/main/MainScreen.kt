@@ -90,14 +90,13 @@ import io.github.hoons1994.shuttersoundzero.core.WifiConnectionStatus
 import io.github.hoons1994.shuttersoundzero.core.adb.CameraMuteFailure
 import io.github.hoons1994.shuttersoundzero.ui.components.CameraMuteFailureDialog
 import io.github.hoons1994.shuttersoundzero.data.SetupIssue
-import io.github.hoons1994.shuttersoundzero.theme.BrandBlueLight
+import io.github.hoons1994.shuttersoundzero.theme.LocalThemeTokens
 import io.github.hoons1994.shuttersoundzero.theme.StatusAmber
 import io.github.hoons1994.shuttersoundzero.theme.StatusGreen
 import io.github.hoons1994.shuttersoundzero.theme.ShutterSoundZeroTheme
 import io.github.hoons1994.shuttersoundzero.ui.notification.PairingNotificationHelper
 import kotlin.math.roundToInt
 
-private val CardRadius = 24.dp
 private val ScreenPadding = 20.dp
 private const val AccessLocalNetworkPermission = "android.permission.ACCESS_LOCAL_NETWORK"
 
@@ -511,7 +510,7 @@ private fun SystemVolumeCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = ScreenPadding),
-        shape = RoundedCornerShape(CardRadius),
+        shape = RoundedCornerShape(LocalThemeTokens.current.cardRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface)
     ) {
         Column(
@@ -744,10 +743,10 @@ private fun StatusHeroCard(
         HomeStatus.SETUP_REQUIRED -> if (hasSetupIssue) "확인 필요" else "설정 필요"
     }
     val badgeColor = when (status) {
-        HomeStatus.APPLYING -> BrandBlueLight
+        HomeStatus.APPLYING -> LocalThemeTokens.current.accentText
         HomeStatus.READY -> StatusGreen
         HomeStatus.REAPPLY_REQUIRED -> StatusAmber
-        HomeStatus.SETUP_REQUIRED -> if (hasSetupIssue) StatusAmber else BrandBlueLight
+        HomeStatus.SETUP_REQUIRED -> if (hasSetupIssue) StatusAmber else LocalThemeTokens.current.accentText
     }
     val primaryLabel = when (status) {
         HomeStatus.APPLYING -> stringResource(R.string.camera_settings_applying)
@@ -760,7 +759,7 @@ private fun StatusHeroCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = ScreenPadding),
-        shape = RoundedCornerShape(CardRadius),
+        shape = RoundedCornerShape(LocalThemeTokens.current.cardRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -796,7 +795,7 @@ private fun StatusHeroCard(
                 OutlinedButton(
                     onClick = onCameraAction,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp)
+                    shape = RoundedCornerShape(LocalThemeTokens.current.buttonRadius)
                 ) {
                     Text("카메라 열어보기")
                 }
@@ -806,13 +805,13 @@ private fun StatusHeroCard(
                     onClick = { onPrimaryAction?.invoke() },
                     enabled = !isInProgress,
                     modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(14.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = BrandBlueLight)
+                    shape = RoundedCornerShape(LocalThemeTokens.current.buttonRadius),
+                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
                 ) {
                     Text(
                         text = primaryLabel.orEmpty(),
                         fontWeight = FontWeight.Bold,
-                        color = Color.White
+                        color = MaterialTheme.colorScheme.onPrimary
                     )
                 }
             }
@@ -884,7 +883,7 @@ private fun SetupProgressCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = ScreenPadding),
-        shape = RoundedCornerShape(CardRadius),
+        shape = RoundedCornerShape(LocalThemeTokens.current.cardRadius),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
         elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
     ) {
@@ -972,7 +971,7 @@ private fun NotificationPopupStyleHint(
         modifier = Modifier
             .fillMaxWidth()
             .padding(start = 42.dp, top = 2.dp, bottom = 6.dp),
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(LocalThemeTokens.current.buttonRadius),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.42f)
         ),
@@ -988,7 +987,7 @@ private fun NotificationPopupStyleHint(
                 color = MaterialTheme.colorScheme.onSurface
             )
             Text(
-                text = "ShutterSoundZero만 [자세한 팝업]으로 바꾸면 6자리 [코드 입력] 버튼을 바로 사용할 수 있습니다.",
+                text = "셔터 제로만 [자세한 팝업]으로 바꾸면 6자리 [코드 입력] 버튼을 바로 사용할 수 있습니다.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 lineHeight = 18.sp
@@ -1016,7 +1015,7 @@ private fun SetupStepRow(
 ) {
     val markerColor = when (state) {
         StepVisualState.COMPLETE -> StatusGreen
-        StepVisualState.CURRENT -> BrandBlueLight
+        StepVisualState.CURRENT -> MaterialTheme.colorScheme.primary
         StepVisualState.ERROR -> MaterialTheme.colorScheme.error
         StepVisualState.PENDING -> MaterialTheme.colorScheme.surfaceVariant
     }
@@ -1060,10 +1059,10 @@ private fun SetupStepRow(
                         else -> number.toString()
                     },
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
-                    color = if (state == StepVisualState.PENDING) {
-                        MaterialTheme.colorScheme.onSurfaceVariant
-                    } else {
-                        Color.White
+                    color = when (state) {
+                        StepVisualState.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
+                        StepVisualState.CURRENT -> MaterialTheme.colorScheme.onPrimary
+                        else -> Color.White
                     }
                 )
             }
