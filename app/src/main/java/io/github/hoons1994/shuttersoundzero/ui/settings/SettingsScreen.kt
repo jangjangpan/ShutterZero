@@ -285,7 +285,7 @@ fun SettingsScreen(
                 RowDivider()
                 InfoRow(
                     title = "사용 방법",
-                    subtitle = "카메라 설정을 바꿀 때만 무선 디버깅을 잠시 켜면 됩니다. 작업이 끝나면 앱이 다시 끄려고 시도합니다."
+                    subtitle = "카메라 설정을 바꿀 때 앱이 무선 디버깅을 잠시 켜고, 끝나면 다시 끕니다. Wi-Fi에만 연결돼 있으면 됩니다."
                 )
             }
 
@@ -428,12 +428,9 @@ fun SettingsScreen(
         if (showReapplyWirelessDebuggingHelp) {
             AlertDialog(
                 onDismissRequest = { showReapplyWirelessDebuggingHelp = false },
-                title = { Text("무선 디버깅을 켜 주세요") },
+                title = { Text("Wi-Fi에 연결해 주세요") },
                 text = {
-                    Text(
-                        "카메라 무음 설정을 다시 적용하는 동안에만 필요합니다.\n\n" +
-                            "무선 디버깅을 켠 뒤 앱으로 돌아와 [카메라 무음 다시 적용]을 다시 눌러 주세요."
-                    )
+                    Text("Wi-Fi에 연결돼 있어야 앱이 무선 디버깅을 잠시 켜서 적용할 수 있습니다.\n\nWi-Fi에 연결한 뒤 다시 눌러 주세요. 처음 쓰는 Wi-Fi라면 무선 디버깅을 한 번 직접 켜고 '이 네트워크에서 항상 허용'을 선택해 주세요.")
                 },
                 confirmButton = {
                     TextButton(
@@ -460,10 +457,7 @@ fun SettingsScreen(
                 onDismissRequest = { showRestoreWirelessDebuggingHelp = false },
                 title = { Text("무선 디버깅을 켜 주세요") },
                 text = {
-                    Text(
-                        "카메라 셔터음을 원래대로 복원하는 동안에만 필요합니다.\n\n" +
-                            "무선 디버깅을 켠 뒤 앱으로 돌아와 [카메라 셔터음 원래대로 복원]을 다시 눌러 주세요."
-                    )
+                    Text("Wi-Fi에 연결돼 있어야 앱이 무선 디버깅을 잠시 켜서 적용할 수 있습니다.\n\nWi-Fi에 연결한 뒤 다시 눌러 주세요. 처음 쓰는 Wi-Fi라면 무선 디버깅을 한 번 직접 켜고 '이 네트워크에서 항상 허용'을 선택해 주세요.")
                 },
                 confirmButton = {
                     TextButton(

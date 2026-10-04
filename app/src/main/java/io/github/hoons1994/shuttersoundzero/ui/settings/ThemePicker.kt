@@ -86,7 +86,7 @@ private fun ThemeOption(
                 modifier = Modifier
                     .size(14.dp)
                     .clip(CircleShape)
-                    .background(scheme.primary)
+                    .background(tokens.fill)
                     .border(1.dp, scheme.onSurface.copy(alpha = 0.12f), CircleShape)
             )
             Spacer(Modifier.width(8.dp))
@@ -111,13 +111,13 @@ private fun ThemeOption(
                 .fillMaxWidth()
                 .heightIn(min = 30.dp)
                 .clip(RoundedCornerShape(tokens.buttonRadius))
-                .background(scheme.primary),
+                .background(tokens.fill),
             contentAlignment = Alignment.Center
         ) {
             Text(
                 text = if (selected) "사용 중" else "적용",
                 style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.SemiBold),
-                color = scheme.onPrimary,
+                color = tokens.onFill,
                 modifier = Modifier.padding(vertical = 6.dp)
             )
         }

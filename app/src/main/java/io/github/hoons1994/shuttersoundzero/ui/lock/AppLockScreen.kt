@@ -1,5 +1,7 @@
 package io.github.hoons1994.shuttersoundzero.ui.lock
 
+import androidx.compose.material3.ButtonDefaults
+import io.github.hoons1994.shuttersoundzero.theme.LocalThemeTokens
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
@@ -64,7 +66,10 @@ fun AppLockScreen(
                 modifier = Modifier.padding(bottom = 16.dp)
             )
         }
-        Button(onClick = onUnlockClick) {
+        Button(
+            onClick = onUnlockClick,
+            colors = ButtonDefaults.buttonColors(containerColor = LocalThemeTokens.current.fill, contentColor = LocalThemeTokens.current.onFill)
+        ) {
             Text("잠금 해제")
         }
         TextButton(onClick = onExitClick) {

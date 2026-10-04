@@ -377,12 +377,9 @@ fun MainScreen(
         AlertDialog(
             onDismissRequest = { viewModel.dismissSwitchFailureHelp() },
             shape = RoundedCornerShape(24.dp),
-            title = { Text("무선 디버깅을 켜 주세요") },
+            title = { Text("Wi-Fi에 연결해 주세요") },
             text = {
-                Text(
-                    "카메라 설정을 바꾸는 동안에만 무선 디버깅이 필요합니다.\n\n" +
-                        "무선 디버깅을 켠 뒤 앱으로 돌아와 [다시 적용하기]를 눌러 주세요. 완료 후에는 앱이 다시 끄려고 시도합니다."
-                )
+                Text("Wi-Fi에 연결돼 있어야 앱이 무선 디버깅을 잠시 켜서 적용할 수 있습니다.\n\nWi-Fi에 연결한 뒤 다시 눌러 주세요. 처음 쓰는 Wi-Fi라면 무선 디버깅을 한 번 직접 켜고 '이 네트워크에서 항상 허용'을 선택해 주세요.")
             },
             confirmButton = {
                 Button(
@@ -390,7 +387,8 @@ fun MainScreen(
                         viewModel.dismissSwitchFailureHelp()
                         SetupSettingsNavigator.openWirelessDebuggingOrDevOptions(context)
                     },
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = LocalThemeTokens.current.fill, contentColor = LocalThemeTokens.current.onFill)
                 ) {
                     Text("무선 디버깅 켜기")
                 }
@@ -420,7 +418,8 @@ fun MainScreen(
                         viewModel.dismissWirelessDebuggingCleanupHelp()
                         SetupSettingsNavigator.openWirelessDebuggingOrDevOptions(context)
                     },
-                    shape = RoundedCornerShape(12.dp)
+                    shape = RoundedCornerShape(12.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = LocalThemeTokens.current.fill, contentColor = LocalThemeTokens.current.onFill)
                 ) {
                     Text("설정 열기")
                 }
@@ -729,7 +728,7 @@ private fun StatusHeroCard(
     val subtitle = when (status) {
         HomeStatus.APPLYING -> "실제 적용 상태를 확인하고 있습니다. 완료될 때까지 기다려 주세요."
         HomeStatus.READY -> "진동·무음 모드에서 촬영음이 나지 않도록 설정되어 있습니다."
-        HomeStatus.REAPPLY_REQUIRED -> "앱 권한은 유지되어 있습니다. 무선 디버깅을 켠 뒤 [다시 적용하기]를 눌러 주세요."
+        HomeStatus.REAPPLY_REQUIRED -> "앱 권한은 유지되어 있습니다. [다시 적용하기]를 누르면 앱이 무선 디버깅을 잠시 켜서 적용하고 다시 끕니다."
         HomeStatus.SETUP_REQUIRED -> if (hasSetupIssue) {
             "문제가 생긴 단계를 아래에 표시했습니다. 해당 단계부터 다시 진행하면 됩니다."
         } else {
@@ -806,26 +805,21 @@ private fun StatusHeroCard(
                     enabled = !isInProgress,
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(LocalThemeTokens.current.buttonRadius),
-                    colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.primary)
+                    colors = ButtonDefaults.buttonColors(containerColor = LocalThemeTokens.current.fill, contentColor = LocalThemeTokens.current.onFill)
                 ) {
                     Text(
                         text = primaryLabel.orEmpty(),
                         fontWeight = FontWeight.Bold,
-                        color = MaterialTheme.colorScheme.onPrimary
+                        color = LocalThemeTokens.current.onFill
                     )
                 }
             }
-            if (status != HomeStatus.SETUP_REQUIRED) {
+            if (status != HomeStatus.SETUP_REQUIRED && isWirelessDebuggingEnabled) {
                 TextButton(
                     onClick = onOpenWirelessDebugging,
                     enabled = !isInProgress
                 ) {
-                    Text(
-                        stringResource(
-                            if (isWirelessDebuggingEnabled) R.string.main_open_wireless_debugging_settings
-                            else R.string.main_reenable_wireless_debugging
-                        )
-                    )
+                    Text(stringResource(R.string.main_open_wireless_debugging_settings))
                 }
             }
         }
@@ -1015,7 +1009,7 @@ private fun SetupStepRow(
 ) {
     val markerColor = when (state) {
         StepVisualState.COMPLETE -> StatusGreen
-        StepVisualState.CURRENT -> MaterialTheme.colorScheme.primary
+        StepVisualState.CURRENT -> LocalThemeTokens.current.fill
         StepVisualState.ERROR -> MaterialTheme.colorScheme.error
         StepVisualState.PENDING -> MaterialTheme.colorScheme.surfaceVariant
     }
@@ -1061,7 +1055,7 @@ private fun SetupStepRow(
                     style = MaterialTheme.typography.labelMedium.copy(fontWeight = FontWeight.Bold),
                     color = when (state) {
                         StepVisualState.PENDING -> MaterialTheme.colorScheme.onSurfaceVariant
-                        StepVisualState.CURRENT -> MaterialTheme.colorScheme.onPrimary
+                        StepVisualState.CURRENT -> LocalThemeTokens.current.onFill
                         else -> Color.White
                     }
                 )

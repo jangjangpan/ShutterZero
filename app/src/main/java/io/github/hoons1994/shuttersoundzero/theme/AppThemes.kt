@@ -31,12 +31,15 @@ data class ThemeTokens(
     val accentText: Color,
     /** 진행 중·현재 단계 표시처럼 작은 면적의 강조색. */
     val accentMark: Color,
+    /** 채워진 주 버튼 색. 카카오 라이트처럼 글자 강조색(primary)과 다를 수 있다. */
+    val fill: Color,
+    val onFill: Color,
     val cardRadius: Dp,
     val buttonRadius: Dp,
 )
 
 val LocalThemeTokens = staticCompositionLocalOf {
-    ThemeTokens(Color(0xFF3182F6), Color(0xFF3182F6), 24.dp, 16.dp)
+    ThemeTokens(Color(0xFF3182F6), Color(0xFF3182F6), Color(0xFF3182F6), Color.White, 24.dp, 16.dp)
 }
 
 private data class Palette(
@@ -107,8 +110,9 @@ private fun palette(style: AppThemeStyle, dark: Boolean): Palette = when (style)
         Color(0xFF3E9BFF), Color(0xFF3E9BFF),
     )
     // Kakao: login #fee500 with #191919 ink, surface #eeeeee, foreground #333333, muted #888888
+    // 라이트에서는 흰 배경 위 노란 글씨가 읽히지 않으므로 primary 는 잉크색, 노랑은 채운 버튼(fill)에만 쓴다.
     AppThemeStyle.KAKAO -> if (!dark) Palette(
-        Color(0xFFFEE500), Color(0xFF191919), Color(0xFFFFF7B3), Color(0xFF3D3700),
+        Color(0xFF191919), Color.White, Color(0xFFFFF7B3), Color(0xFF3D3700),
         Color(0xFFF5F5F5), Color.White, Color(0xFFEEEEEE), Color(0xFF191919), Color(0xFF666666),
         Color(0xFF191919), Color(0xFFD9C400),
     ) else Palette(
@@ -130,7 +134,10 @@ internal fun tokensFor(style: AppThemeStyle, dark: Boolean): ThemeTokens {
         AppThemeStyle.ONE_UI -> 26.dp to 20.dp
         AppThemeStyle.KAKAO -> 16.dp to 12.dp
     }
-    return ThemeTokens(p.accentText, p.accentMark, card, button)
+    val kakaoLight = style == AppThemeStyle.KAKAO && !dark
+    val fill = if (kakaoLight) Color(0xFFFEE500) else p.primary
+    val onFill = if (kakaoLight) Color(0xFF191919) else p.onPrimary
+    return ThemeTokens(p.accentText, p.accentMark, fill, onFill, card, button)
 }
 
 /** 선택한 테마. 화면이 바로 바뀌도록 Compose State 로 들고 있는다. */
