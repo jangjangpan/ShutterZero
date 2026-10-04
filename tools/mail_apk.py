@@ -1,7 +1,7 @@
 """릴리스 APK가 바뀔 때마다 Gmail/네이버 '나에게 보내기'로 전달한다.
 
 처음 한 번 (터미널에서 직접 실행 — 앱 비밀번호를 묻는다):
-    py tools/mail_apk.py setup gmail jangjangpan@gmail.com
+    py tools/mail_apk.py setup gmail 내주소@gmail.com
     py tools/mail_apk.py setup naver 아이디@naver.com
 
 그 뒤로는 `gradlew assembleRelease` 가 끝날 때 Gradle 이 자동으로 부른다:

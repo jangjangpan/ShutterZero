@@ -404,7 +404,8 @@ private fun sendDiagnosticEmail(
         appendLine(report.diagnosticText)
     }
     val mailUri = Uri.parse(
-        "mailto:${Uri.encode(DiagnosticReportBuilder.SUPPORT_EMAIL)}" +
+        // 받는 사람은 비워 두고 사용자가 메일 앱에서 고른다.
+        "mailto:" +
             "?subject=${Uri.encode(report.subject)}" +
             "&body=${Uri.encode(body)}"
     )

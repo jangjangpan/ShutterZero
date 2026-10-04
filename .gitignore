@@ -19,3 +19,6 @@ release.jks
 release.jks.base64
 *.apk
 *.aab
+
+# Python
+__pycache__/

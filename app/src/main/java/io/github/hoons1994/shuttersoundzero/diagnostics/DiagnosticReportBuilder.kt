@@ -9,7 +9,6 @@ import io.github.hoons1994.shuttersoundzero.core.adb.LocalNetworkAccess
 import io.github.hoons1994.shuttersoundzero.data.PreferencesRepository
 
 object DiagnosticReportBuilder {
-    const val SUPPORT_EMAIL = "jangjangpan@gmail.com"
     private const val MAX_EMAIL_EVENTS = 100
 
     data class Report(

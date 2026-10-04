@@ -1,3 +1,33 @@
+# 셔터 제로 (ShutterZero)
+
+> [셔터사운드 제로](https://github.com/hoons1994/ShutterSoundZero)를 바탕으로 한 개인용 수정판입니다. 라이선스는 원본과 같은 GPL-3.0입니다.
+
+## 원본과 달라진 점
+
+- **알림창 원터치 토글** — 무선 디버깅이 꺼져 있어도 앱이 직접 켜서 셔터음을 바꾸고 다시 끕니다. 알림창의 '셔터음' 타일을 한 번 누르면 무음/복원이 바뀝니다(Wi-Fi 연결 필요). 1회 설정이 끝나면 시스템 '버튼 추가' 창으로 타일을 바로 넣을 수 있습니다.
+- **테마 4종** — [oh-my-design.kr](https://oh-my-design.kr/) 레퍼런스의 Toss · 당근 · One UI · 카카오 토큰. 설정에서 바로 바뀌고, 라이트/다크를 모두 지원합니다.
+- **새 앱 아이콘** — 적응형 아이콘(셔터 버튼 + 사선)과 테마 아이콘용 단색 레이어, 알림 아이콘.
+- 패키지 `dev.junyj.shutterzero`, 앱 이름 '셔터 제로'라서 원본과 함께 설치할 수 있습니다. arm64 전용으로 빌드합니다.
+- 오류 신고는 받는 사람을 비워 둔 채 메일 앱을 엽니다.
+
+처음 쓰는 Wi-Fi에서는 무선 디버깅을 한 번 직접 켜고 '이 네트워크에서 항상 허용'을 선택해야 합니다. 그다음부터는 앱이 알아서 켜고 끕니다.
+
+### 빌드
+
+```
+set JAVA_HOME=<JDK 21 경로>
+gradlew assembleRelease
+```
+
+서명 정보는 `local.properties`의 `RELEASE_STORE_FILE` / `RELEASE_STORE_PASSWORD` / `RELEASE_KEY_ALIAS` / `RELEASE_KEY_PASSWORD`로 지정합니다(`local.properties.example` 참고).
+릴리스 빌드가 끝나면 `tools/mail_apk.py`가 바뀐 APK를 메일 '나에게 보내기'로 보냅니다. 처음 한 번 `py tools/mail_apk.py setup gmail 내주소@gmail.com`으로 설정하며, 설정하지 않으면 경고만 출력하고 넘어갑니다.
+
+원본의 CI·릴리스 자동화(GitHub Actions)는 원 개발자의 서명키와 배포 절차에 묶여 있어 이 저장소에서는 제거했습니다.
+
+---
+
+아래는 원본 README입니다.
+
 # 셔터사운드 제로 (Shutter Sound Zero)
 
 > 삼성 갤럭시폰을 위한 카메라 셔터음 설정 도구
