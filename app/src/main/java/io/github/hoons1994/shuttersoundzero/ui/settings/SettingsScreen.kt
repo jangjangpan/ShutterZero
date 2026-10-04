@@ -82,7 +82,7 @@ import io.github.hoons1994.shuttersoundzero.ui.notification.PairingNotificationH
 
 private val CardPaddingH = 20.dp
 private val CardPaddingV = 16.dp
-private const val RELEASES_URL = "https://github.com/hoons1994/ShutterSoundZero/releases/latest"
+private const val RELEASES_URL = "https://github.com/jangjangpan/ShutterZero/releases/latest"
 private const val LOCAL_NETWORK_PERMISSION_MESSAGE =
     "카메라 설정을 바꾸려면 로컬 네트워크 권한이 필요합니다. 앱 설정에서 권한을 허용한 뒤 다시 시도해 주세요."
 
