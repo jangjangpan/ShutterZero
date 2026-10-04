@@ -1,5 +1,6 @@
 package io.github.hoons1994.shuttersoundzero.ui.settings
 
+import io.github.hoons1994.shuttersoundzero.service.QuickTileRequester
 import io.github.hoons1994.shuttersoundzero.theme.LocalThemeTokens
 import android.database.ContentObserver
 import android.content.Context
@@ -245,6 +246,29 @@ fun SettingsScreen(
 
             GroupLabel("카메라 설정")
             SettingsCard {
+                if (QuickTileRequester.isSupported) {
+                    QuickTileRequester.load(context)
+                    ClickableRow(
+                        title = "알림창에 셔터음 토글 추가",
+                        subtitle = if (QuickTileRequester.isAdded) {
+                            "추가됨 · 알림창을 내려 '셔터음' 타일을 누르면 무음/복원이 바뀝니다"
+                        } else {
+                            "알림창 빠른 설정에 한 번 탭으로 켜고 끄는 타일을 넣습니다"
+                        },
+                        onClick = {
+                            QuickTileRequester.request(context) { added ->
+                                if (added) {
+                                    Toast.makeText(context, "알림창에 '셔터음' 타일이 있습니다.", Toast.LENGTH_SHORT).show()
+                                }
+                            }
+                        }
+                    )
+                    HorizontalDivider(
+                        modifier = Modifier.padding(horizontal = 20.dp),
+                        color = MaterialTheme.colorScheme.surfaceVariant,
+                        thickness = 0.5.dp
+                    )
+                }
                 if (isCscMuted) {
                     ClickableRow(
                         title = "카메라 셔터음 원래대로 복원",

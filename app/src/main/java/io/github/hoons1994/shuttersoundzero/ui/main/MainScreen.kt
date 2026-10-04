@@ -81,6 +81,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation3.runtime.NavKey
+import io.github.hoons1994.shuttersoundzero.service.QuickTileRequester
 import io.github.hoons1994.shuttersoundzero.R
 import io.github.hoons1994.shuttersoundzero.Settings
 import io.github.hoons1994.shuttersoundzero.core.CscMuteManager
@@ -715,6 +716,15 @@ private fun StatusHeroCard(
     onCameraAction: () -> Unit
 ) {
     val hasSetupIssue = status == HomeStatus.SETUP_REQUIRED && setupIssue != null
+    val context = LocalContext.current
+    QuickTileRequester.load(context)
+    val isLinked = status == HomeStatus.READY || status == HomeStatus.REAPPLY_REQUIRED
+    // 1회 설정이 끝나면 알림창 토글을 넣을지 한 번만 자동으로 물어본다.
+    LaunchedEffect(isLinked) {
+        if (isLinked && QuickTileRequester.shouldAutoAsk(context)) {
+            QuickTileRequester.request(context)
+        }
+    }
     val title = when (status) {
         HomeStatus.APPLYING -> stringResource(R.string.camera_settings_applying)
         HomeStatus.READY -> "카메라 무음 설정 완료"
@@ -812,6 +822,15 @@ private fun StatusHeroCard(
                         fontWeight = FontWeight.Bold,
                         color = LocalThemeTokens.current.onFill
                     )
+                }
+            }
+            if (isLinked && QuickTileRequester.isSupported && !QuickTileRequester.isAdded) {
+                OutlinedButton(
+                    onClick = { QuickTileRequester.request(context) },
+                    modifier = Modifier.fillMaxWidth(),
+                    shape = RoundedCornerShape(LocalThemeTokens.current.buttonRadius)
+                ) {
+                    Text("알림창에 토글 추가")
                 }
             }
             if (status != HomeStatus.SETUP_REQUIRED && isWirelessDebuggingEnabled) {

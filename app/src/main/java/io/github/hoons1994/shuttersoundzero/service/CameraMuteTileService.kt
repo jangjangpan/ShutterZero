@@ -34,8 +34,20 @@ class CameraMuteTileService : TileService() {
         serviceScope.cancel()
     }
 
+    override fun onTileAdded() {
+        super.onTileAdded()
+        QuickTileRequester.markAdded(applicationContext, true)
+    }
+
+    override fun onTileRemoved() {
+        super.onTileRemoved()
+        QuickTileRequester.markAdded(applicationContext, false)
+    }
+
     override fun onStartListening() {
         super.onStartListening()
+        // 패널에 보이고 있다는 것은 타일이 추가돼 있다는 뜻이다(adb 등으로 넣은 경우 포함).
+        QuickTileRequester.markAdded(applicationContext, true)
         updateTileState()
     }
 
